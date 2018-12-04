@@ -9,25 +9,23 @@ class StartStop(FlaskForm):
 
 
 class LoginForm(FlaskForm):
-    username = StringField('Usuario', validators=[DataRequired()])
+    username = StringField('email', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     remember_me = BooleanField('Recuerdame')
     submit = SubmitField('Ingresar')
 
 
 class RegistrationForm(FlaskForm):
-    username = StringField('Usuario', validators=[DataRequired()])
+    username = StringField('Nombre', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
     password2 = PasswordField('Repetir Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Registrar')
 
-
     def validate_username(self, username):
-        user = User.query.filter_by(username=username.data).first()
+        user = User.query.filter_by(fullname=username.data).first()
         if user is not None:
             raise ValidationError('Nombre de usuario no disponible.')
-
 
     def validate_email(self, email):
         user = User.query.filter_by(email=email.data).first()
@@ -36,7 +34,7 @@ class RegistrationForm(FlaskForm):
 
 
 class EditProfileForm(FlaskForm):
-    username = StringField('Usuario', validators=[DataRequired()])
+    username = StringField('Nombre', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired()])
     oldpassword = PasswordField('Password Anterior')
     newpassword = PasswordField('Password Nuevo')
@@ -46,15 +44,13 @@ class EditProfileForm(FlaskForm):
     def __init__(self, original_username, original_email, *args, **kwargs):
         super(EditProfileForm, self).__init__(*args, **kwargs)
         self.original_username = original_username
-        self.username.data = original_username
         self.original_email = original_email
-        self.email.data = original_email
 
     def validate_username(self, username):
         if username.data != self.original_username:
-            user = User.query.filter_by(username=username.data).first()
+            user = User.query.filter_by(fullname=username.data).first()
             if user is not None:
-                raise ValidationError('Nombre de usuario no disponible.')
+                raise ValidationError('Este nombre ya ha sido registrado.')
 
     def validate_email(self, email):
         if email.data != self.original_email:

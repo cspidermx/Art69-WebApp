@@ -12,6 +12,14 @@ from webapp.forms import RegistrationForm, EditProfileForm, ResetPasswordRequest
 from email.message import EmailMessage
 import threading
 import smtplib
+from Crypto.Cipher import AES
+
+
+def decrypt_id(ctxt):
+    decryption_suite = AES.new(app.config['SECRET_KEY'].encode("ISO-8859-1"), AES.MODE_CBC,
+                               iv=app.config['SECRET_IV'].encode("ISO-8859-1"))
+    ptext = decryption_suite.decrypt(ctxt).decode("utf-8").strip()
+    return ptext
 
 
 def send_async_email(app_, srv, msge):
@@ -61,7 +69,7 @@ def login():
         return redirect(url_for('index'))
     frm_lgin = LoginForm()
     if frm_lgin.validate_on_submit():
-        user = User.query.filter_by(username=frm_lgin.username.data).first()
+        user = User.query.filter_by(email=frm_lgin.username.data).first()
         if user is None or not user.check_password(frm_lgin.password.data):
             flash('Nombre de usuario o password invalido')
             return redirect(url_for('login'))
@@ -80,12 +88,12 @@ def logout():
 
 
 @app.route('/register', methods=['GET', 'POST'])
-@login_required
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = User(username=form.username.data, email=form.email.data)
+        user = User(fullname=form.username.data, email=form.email.data)
         user.set_password(form.password.data)
+        user.new_id()
         wappdb.session.add(user)
         wappdb.session.commit()
         flash('Se ha registrado el usuario nuevo.')
@@ -96,26 +104,35 @@ def register():
 @app.route('/usuarios')
 @login_required
 def usuarios():
-    u = User.query.all()
-    return render_template('usuarios.html', title='Usuarios', users=u)
+    if current_user.level == 0:
+        u = User.query.all()
+        return render_template('usuarios.html', title='Usuarios', users=u)
+    else:
+        return redirect(url_for('index'))
 
 
-@app.route('/perfil/<username>', methods=['GET', 'POST'])
+@app.route('/perfil/<iduser>', methods=['GET', 'POST'])
+@app.route('/perfil', defaults={'iduser': None}, methods=['GET', 'POST'])
+@app.route('/perfil/', defaults={'iduser': None}, methods=['GET', 'POST'])
 @login_required
-def perfil(username):
-    usr = User.query.filter_by(username=username).first_or_404()
-    frm = EditProfileForm(usr.username, usr.email)
-    frm.username.id = usr.username
+def perfil(iduser):
+    cipher_text = iduser.encode("ISO-8859-1")
+    iduser = decrypt_id(cipher_text)
+    if not (str(iduser) == str(current_user.id) or str(current_user.level) == '0'):
+        return redirect(url_for('index'))
+    usr = User.query.filter_by(id=iduser).first_or_404()
+    frm = EditProfileForm(usr.fullname, usr.email)
+    frm.username.id = str(usr.fullname).replace(' ', '_')
     frm.email.id = usr.email
     if frm.validate_on_submit():
-        user = User.query.filter_by(username=frm.original_username).first()
-        user.username = frm.username.data
+        user = User.query.filter_by(email=frm.original_email).first()
+        user.fullname = frm.username.data
         user.email = frm.email.data
-        if frm.oldpassword != "":
+        if frm.oldpassword.data != '':
             user.set_password(frm.newpassword.data)
         wappdb.session.commit()
-        flash('Actualización completada con éxito.')
-        return redirect(url_for('usuarios'))
+        flash('Actualización Exitosa.')
+        return redirect(url_for('index'))
     return render_template('perfil.html', user=usr, form=frm)
 
 
@@ -128,7 +145,7 @@ def reset_password_request():
         user = User.query.filter_by(email=form.email.data).first()
         if user:
             send_password_reset_email(user)
-        flash('Check your email for the instructions to reset your password')
+        flash('Revise su correo electrónico para obtener las instrucciones para restablecer su contraseña')
         return redirect(url_for('login'))
     return render_template('reset_password_request.html', title='Restablecer Password', form=form)
 
@@ -144,6 +161,22 @@ def reset_password(token):
     if form.validate_on_submit():
         user.set_password(form.password.data)
         wappdb.session.commit()
-        flash('Your password has been reset.')
+        flash('Su contraseña ha sido restablecida.')
         return redirect(url_for('login'))
     return render_template('reset_password.html', form=form)
+
+
+@app.route('/dltusr/<iduser>', methods=['GET', 'POST'])
+@app.route('/dltusr', defaults={'iduser': None}, methods=['GET', 'POST'])
+@app.route('/dltusr/', defaults={'iduser': None}, methods=['GET', 'POST'])
+@login_required
+def dltusr(iduser):
+    if current_user.level == 0:
+        cipher_text = iduser.encode("ISO-8859-1")
+        iduser = decrypt_id(cipher_text)
+        if current_user.level != 0:
+            return redirect(url_for('index'))
+        usr = User.query.filter_by(id=iduser).first()
+        wappdb.session.delete(usr)
+        wappdb.session.commit()
+    return redirect(url_for('usuarios'))

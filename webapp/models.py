@@ -5,13 +5,38 @@ from webapp import login
 from time import time
 import jwt
 from webapp import app
+from sqlalchemy.sql.expression import func
+from Crypto.Cipher import AES
+
+
+def encript_id(id_txt):
+    n = 16 - len(str(id_txt))
+    string_val = "".join(" " for i in range(n)) + str(id_txt)
+    encryption_suite = AES.new(app.config['SECRET_KEY'].encode("ISO-8859-1"), AES.MODE_CBC,
+                               iv=app.config['SECRET_IV'].encode("ISO-8859-1"))
+    cipher_text = encryption_suite.encrypt(string_val.encode("ISO-8859-1"))
+    return cipher_text.decode("ISO-8859-1")
 
 
 class User(UserMixin, wappdb.Model):
     id = wappdb.Column(wappdb.Integer, primary_key=True)
-    username = wappdb.Column(wappdb.String(64), index=True, unique=True)
-    email = wappdb.Column(wappdb.String(120), index=True, unique=True)
-    password_hash = wappdb.Column(wappdb.String(128))
+    email = wappdb.Column(wappdb.String, index=True, unique=True)
+    fullname = wappdb.Column(wappdb.String, index=True, unique=True)
+    password_hash = wappdb.Column(wappdb.String)
+    level = wappdb.Column(wappdb.Integer)
+    activo = wappdb.Column(wappdb.Boolean)
+
+    def enc_id(self):
+        return encript_id(self.id)
+
+    def new_id(self):
+        mx = wappdb.session.query(func.max(User.id)).one()
+        if mx[0] is not None:
+            self.id = mx[0] + 1
+        else:
+            self.id = 1
+        self.level = 1
+        self.activo = True
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -20,7 +45,7 @@ class User(UserMixin, wappdb.Model):
         return check_password_hash(self.password_hash, password)
 
     def __repr__(self):
-        return '<Usuario {}>'.format(self.username)
+        return '<Usuario {}>'.format(self.email)
 
     def get_reset_password_token(self, expires_in=600):
         return jwt.encode(
