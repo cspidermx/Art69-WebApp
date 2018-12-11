@@ -133,7 +133,7 @@ def runrobot():
             read_csv = csv.reader(a69csv, delimiter=',')
             i = 0
             fecha = ''
-            headers = ''
+            # headers = ''
             for row in read_csv:
                 if i == 0:
                     fecha = datetime.strptime(row[0][row[0].find(' al ') + 4:], '%d de %B de %Y')
@@ -170,8 +170,11 @@ def runrobot():
                                         ndef=nogdf, fdef=fogdf, ns=nogsf, fs=fogsf)
                         DBSESSION.commit()
                     else:
-                        newrecord = DataArt69b(row[0], row[1], row[2], row[3], nogpr, fogpr, nogdv, fogdv, nogdf, fogdf,
-                                               nogsf, fogsf)
+                        newrecord = DataArt69b(id=row[0], rfc=row[1], nombre=row[2], situacion=row[3],
+                                               numofi_presuncion=nogpr, fechaofi_presuncion=fogpr,
+                                               numofi_desvirtuado=nogdv, fechaofi_desvirtuado=fogdv,
+                                               numofi_definitivo=nogdf, fechaofi_definitivo=fogdf,
+                                               numofi_sentfav=nogsf, fechaofi_sentfav=fogsf)
                         DBSESSION.add(newrecord)
                         DBSESSION.commit()
                 i += 1
