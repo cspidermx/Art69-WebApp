@@ -1,4 +1,5 @@
 # http://omawww.sat.gob.mx/cifras_sat/Paginas/datos/vinculo.html?page=ListCompleta69B.html
+# http://omawww.sat.gob.mx/cifras_sat/Paginas/datos/vinculo.html?page=ListCompleta69.html
 import urllib.request
 import urllib.error
 import time
@@ -8,7 +9,7 @@ from webworker.models import Info, DataArt69b
 from sqlalchemy.sql.expression import func
 from datetime import datetime
 from datetime import timedelta
-from webworker import ART69CSVURL, DBSESSION
+from webworker import ART69BCSVURL, DBSESSION, ART69CSVURL
 import csv
 
 
@@ -110,25 +111,30 @@ def dateconvert(dtafch, ln):
     return fechadt
 
 
-def runrobot():
-    locale.setlocale(locale.LC_ALL, 'Spanish_Mexico')
+def fnum(cual):
     filenum = "0001"
-    if not os.path.exists('historicalcsv'):
-        os.mkdir('historicalcsv')
+    if not os.path.exists('historical' + cual + 'csv'):
+        os.mkdir('historical' + cual + 'csv')
     else:
-        last = os.listdir('historicalcsv')
+        last = os.listdir('historical' + cual + 'csv')
         mx = int(filenum)
         for fln in last:
             newmx = int(fln[7:11]) + 1
             if newmx > mx:
                 rng = 4 - len(str(newmx))
                 filenum = "".join("0" for ii in range(rng)) + str(newmx)
-    art69_file = 'historicalcsv/art69b_' + str(filenum) + '.csv'
-    getfile(ART69CSVURL, art69_file)
+    return filenum
 
-    d = checkdb(art69_file)
+
+def runrobot():
+    locale.setlocale(locale.LC_ALL, 'Spanish_Mexico')
+    art69b_file = 'historical69bcsv/art69b_' + str(fnum('69b')) + '.csv'
+    getfile(ART69BCSVURL, art69b_file)
+    art69_file = 'historical69csv/art69_' + str(fnum('69')) + '.csv'
+    getfile(ART69CSVURL, art69_file)
+    d = checkdb(art69b_file)
     if d != 0:
-        with open(art69_file) as a69csv:
+        with open(art69b_file) as a69csv:
             a69csv.seek(0)
             read_csv = csv.reader(a69csv, delimiter=',')
             i = 0
@@ -180,6 +186,6 @@ def runrobot():
                 i += 1
             print(fecha)
     else:
-        os.remove(art69_file)
+        os.remove(art69b_file)
 
     DBSESSION.close()
