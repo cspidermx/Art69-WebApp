@@ -1,19 +1,19 @@
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, Date
+from sqlalchemy import Column, Integer, String, Date, DECIMAL
 from sqlalchemy.sql.expression import func
 from webworker import DBSESSION
 
 Base = declarative_base()
 
 
-class Info(Base):
+class Info69b(Base):
     __tablename__ = 'info_art69b'
 
     id = Column(Integer, primary_key=True)
     fechaupdate = Column(Date)
 
     def new_id(self):
-        mx = DBSESSION.query(func.max(Info.id)).one()
+        mx = DBSESSION.query(func.max(Info69b.id)).one()
         if mx[0] is not None:
             self.id = mx[0] + 1
         else:
@@ -24,6 +24,7 @@ class DataArt69b(Base):
     __tablename__ = 'sat_art69b'
 
     id = Column(Integer, primary_key=True)
+    id_info = Column(Integer, primary_key=True)
     rfc = Column(String, nullable=False)
     nombre = Column(String, nullable=False)
     situacion = Column(String, nullable=False)
@@ -43,30 +44,82 @@ class DataArt69b(Base):
         else:
             self.id = 1
 
-    def update(self, r, nm, st, np, fp, ndv, fdv, ndef, fdef, ns, fs):
-        self.rfc = r
-        self.nombre = nm
-        self.situacion = st
-        self.numofi_presuncion = np
-        self.fechaofi_presuncion = fp
-        self.numofi_desvirtuado = ndv
-        self.fechaofi_desvirtuado = fdv
-        self.numofi_definitivo = ndef
-        self.fechaofi_definitivo = fdef
-        self.numofi_sentfav = ns
-        self.fechaofi_sentfav = fs
 
-
-class DesvirtuadoArt69b(Base):
-    __tablename__ = 'desvirtuado_art69b'
+class HistoricArt69b(Base):
+    __tablename__ = 'historico_art69b'
 
     id = Column(Integer, primary_key=True)
-    id_art69 = Column(Integer, nullable=False)
+    id_info = Column(Integer, primary_key=True)
     rfc = Column(String, nullable=False)
     nombre = Column(String, nullable=False)
+    situacion = Column(String, nullable=False)
+    numofi_presuncion = Column(String, nullable=False)
+    fechaofi_presuncion = Column(Date, nullable=False)
+    numofi_desvirtuado = Column(String)
+    fechaofi_desvirtuado = Column(Date)
+    numofi_definitivo = Column(String)
+    fechaofi_definitivo = Column(Date)
+    numofi_sentfav = Column(String)
+    fechaofi_sentfav = Column(Date)
 
     def new_id(self):
-        mx = DBSESSION.query(func.max(DataArt69b.id)).one()
+        mx = DBSESSION.query(func.max(HistoricArt69b.id)).one()
+        if mx[0] is not None:
+            self.id = mx[0] + 1
+        else:
+            self.id = 1
+
+
+class Info69(Base):
+    __tablename__ = 'info_art69'
+
+    id = Column(Integer, primary_key=True)
+    fechaupdate = Column(Date)
+
+    def new_id(self):
+        mx = DBSESSION.query(func.max(Info69.id)).one()
+        if mx[0] is not None:
+            self.id = mx[0] + 1
+        else:
+            self.id = 1
+
+
+class DataArt69(Base):
+    __tablename__ = 'sat_art69'
+
+    id = Column(Integer, primary_key=True)
+    id_info = Column(Integer, primary_key=True)
+    rfc = Column(String, nullable=False)
+    razon_social = Column(String, nullable=False)
+    tipo_persona = Column(String, nullable=False)
+    supuesto = Column(String, nullable=False)
+    fech_prim_pub = Column(Date, nullable=False)
+    monto = Column(DECIMAL)
+    fech_pub = Column(Date)
+
+    def new_id(self):
+        mx = DBSESSION.query(func.max(DataArt69.id)).one()
+        if mx[0] is not None:
+            self.id = mx[0] + 1
+        else:
+            self.id = 1
+
+
+class HistoricArt69(Base):
+    __tablename__ = 'historico_art69'
+
+    id = Column(Integer, primary_key=True)
+    id_info = Column(Integer, primary_key=True)
+    rfc = Column(String, nullable=False)
+    razon_social = Column(String, nullable=False)
+    tipo_persona = Column(String, nullable=False)
+    supuesto = Column(String, nullable=False)
+    fech_prim_pub = Column(Date, nullable=False)
+    monto = Column(DECIMAL)
+    fech_pub = Column(Date)
+
+    def new_id(self):
+        mx = DBSESSION.query(func.max(DataArt69.id)).one()
         if mx[0] is not None:
             self.id = mx[0] + 1
         else:
