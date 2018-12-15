@@ -5,7 +5,7 @@ import urllib.error
 import time
 import locale
 import os
-from webworker.models import Info69b, DataArt69b, HistoricArt69b, Info69, DataArt69, HistoricArt69
+from webworker.models import Info69b, DataArt69b, HistoricArt69b, Info69, DataArt69
 from sqlalchemy.sql.expression import func
 from datetime import datetime
 from datetime import timedelta
@@ -191,24 +191,16 @@ def archive69b():
         DBSESSION.commit()
 
 
-def archive69():
-    current_idinfo = DBSESSION.query(func.max(Info69.id)).one_or_none()
-    if current_idinfo[0] is not None:
-        data = DBSESSION.query(DataArt69).all()
-        for rc in data:
-            newrecord = HistoricArt69(id=rc.id, id_info=rc.id_info, rfc=rc.rfc, razon_social=rc.razon_social,
-                                      tipo_persona=rc.tipo_persona, supuesto=rc.supuesto,
-                                      fech_prim_pub=rc.fech_prim_pub, monto=rc.monto, fech_pub=rc.fech_pub)
-            DBSESSION.add(newrecord)
-        DBSESSION.commit()
-        DBSESSION.query(DataArt69).delete()
-        DBSESSION.commit()
+def clean69():
+    DBSESSION.query(DataArt69).delete()
+    DBSESSION.query(Info69).delete()
+    DBSESSION.commit()
 
 
 def update69b():
     art69b_file = 'historical69bcsv/art69b_' + str(fnum('69b')) + '.csv'
     getfile(ART69BCSVURL, art69b_file)
-    # art69b_file = 'historical69bcsv/art69b_0001.csv'
+    # art69b_file = 'historical69bcsv/art69b_0002.csv'
     d = check69bdb(art69b_file)
     if d != 0:
         archive69b()
@@ -269,7 +261,7 @@ def update69():
     # art69_file = 'historical69csv/art69_0001.csv'
     d, fecha = check69db(art69_file)
     if d != 0:
-        archive69()
+        clean69()
         with open(art69_file) as a69csv:
             a69csv.seek(0)
             read_csv = csv.reader(a69csv, delimiter=',')
@@ -328,4 +320,3 @@ def runrobot():
     dta = fin - ini
     print(dta.total_seconds())
     DBSESSION.close()
-

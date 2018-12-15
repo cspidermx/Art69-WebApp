@@ -103,24 +103,3 @@ class DataArt69(Base):
             self.id = mx[0] + 1
         else:
             self.id = 1
-
-
-class HistoricArt69(Base):
-    __tablename__ = 'historico_art69'
-
-    id = Column(Integer, primary_key=True)
-    id_info = Column(Integer, primary_key=True)
-    rfc = Column(String, nullable=False)
-    razon_social = Column(String, nullable=False)
-    tipo_persona = Column(String, nullable=False)
-    supuesto = Column(String, nullable=False)
-    fech_prim_pub = Column(Date, nullable=False)
-    monto = Column(DECIMAL)
-    fech_pub = Column(Date)
-
-    def new_id(self):
-        mx = DBSESSION.query(func.max(DataArt69.id)).one()
-        if mx[0] is not None:
-            self.id = mx[0] + 1
-        else:
-            self.id = 1
