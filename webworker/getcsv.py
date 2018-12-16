@@ -77,7 +77,7 @@ def check69db(filename):
 def getfile(url, filename):
     dl = False
     gf_i = 0
-    print('Getting file...')
+    print('Getting file...', filename)
     while not dl and gf_i < 10:
         try:
             print('Try #{}'.format(gf_i))
