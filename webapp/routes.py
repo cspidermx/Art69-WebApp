@@ -8,7 +8,7 @@ from flask_login import login_required
 from flask import request
 from werkzeug.urls import url_parse
 from webapp import wappdb
-from webapp.forms import RegistrationForm, EditProfileForm, ResetPasswordRequestForm, ResetPasswordForm, StartStop
+from webapp.forms import RegistrationForm, EditProfileForm, ResetPasswordRequestForm, ResetPasswordForm, SearchArts
 from email.message import EmailMessage
 import threading
 import smtplib
@@ -42,7 +42,7 @@ def send_password_reset_email(usr):
     smtpserver = app.config['SMTP']
 
     msg = EmailMessage()
-    msg['Subject'] = "Restablecer Password - Robot Email"
+    msg['Subject'] = "Restablecer Password - Revision Art. 69 y 69b"
     msg['From'] = smtpserver['user']
     msg['To'] = usr.email
     msg.set_type('text/html')
@@ -59,8 +59,11 @@ def send_password_reset_email(usr):
 @app.route('/index', methods=['GET', 'POST'])
 @login_required
 def index():
-    frmss = StartStop()
-    return render_template('index.html', title='Inicio', serv=True, form=frmss)
+    frmss = SearchArts()
+    srchresp = None
+    if frmss.validate_on_submit():
+        pass
+    return render_template('index.html', title='Inicio', form=frmss, resp=srchresp)
 
 
 @app.route('/login', methods=['GET', 'POST'])

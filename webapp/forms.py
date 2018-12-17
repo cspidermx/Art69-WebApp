@@ -4,8 +4,9 @@ from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 from webapp.models import User
 
 
-class StartStop(FlaskForm):
-    submit = SubmitField('_____')
+class SearchArts(FlaskForm):
+    srchstr = StringField('A Buscar: ', validators=[DataRequired()])
+    submit = SubmitField('_______')
 
 
 class LoginForm(FlaskForm):
@@ -83,3 +84,5 @@ class ResetPasswordForm(FlaskForm):
     password2 = PasswordField(
         'Repetir Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Solicitar Restablecer Password')
+
+

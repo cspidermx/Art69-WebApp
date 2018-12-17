@@ -1,18 +1,44 @@
 {% extends "base.html" %}
 {% import 'bootstrap/wtf.html' as wtf %}
-
+{% block styles %}
+{{super()}}
+    <!-- Custom Style -->
+    <link href="{{ url_for('static', filename='customstyles/custom.css') }}" rel="stylesheet" type="text/css">
+{% endblock %}
 {% block app_content %}
     <h1>Hola, {{ current_user.fullname }}!</h1><BR>
-    <p>
-        {% if serv.running %}
-            El servicio esta: <img src="{{ url_for('static', filename='Encendido.jpg') }}">
-        {% else %}
-            El servicio esta: <img src="{{ url_for('static', filename='Apagado.jpg') }}">
-        {% endif %}
-     </p>
     <div class="row">
-        <div class="col-md-4">
-            {{ wtf.quick_form(form) }}
+        <div class="col-md-8">
+            <form action = "" method = post class="form" role="form">
+                <fieldset>
+                    {{ form.hidden_tag() }}
+                        <div class="row">
+                            <div class="col-sm-5">
+                                {{ form.srchstr.label(class="control-label") }}
+                            </div>
+                            <div class="col-sm-3">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-5">
+                                <div class="form-group required">
+                                    {{ form.srchstr(class="form-control") }}
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                    {{ form.submit(class="btn btn-default srchbtn") }}
+                            </div>
+                        </div>
+                       <br>
+                </fieldset>
+            </form>
         </div>
     </div>
+    <hr>
+    {% if resp is not none %}
+        hi
+    {% endif %}
 {% endblock %}
+
+
+<!--   -->

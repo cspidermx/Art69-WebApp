@@ -1,0 +1,11 @@
+@charset "utf-8";
+/* CSS Document */
+
+input[type=submit].srchbtn {
+  background:url("/static/SearchBtn.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  border: none;
+  cursor: pointer;
+  color: transparent;
+}
