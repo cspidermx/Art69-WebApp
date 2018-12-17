@@ -18,6 +18,24 @@ def encript_id(id_txt):
     return cipher_text.decode("ISO-8859-1")
 
 
+class DataArt69b(wappdb.Model):
+    __tablename__ = 'sat_art69b'
+
+    id = wappdb.Column(wappdb.Integer, primary_key=True)
+    id_info = wappdb.Column(wappdb.Integer, primary_key=True)
+    rfc = wappdb.Column(wappdb.String, nullable=False)
+    nombre = wappdb.Column(wappdb.String, nullable=False)
+    situacion = wappdb.Column(wappdb.String, nullable=False)
+    numofi_presuncion = wappdb.Column(wappdb.String, nullable=False)
+    fechaofi_presuncion = wappdb.Column(wappdb.Date, nullable=False)
+    numofi_desvirtuado = wappdb.Column(wappdb.String)
+    fechaofi_desvirtuado = wappdb.Column(wappdb.Date)
+    numofi_definitivo = wappdb.Column(wappdb.String)
+    fechaofi_definitivo = wappdb.Column(wappdb.Date)
+    numofi_sentfav = wappdb.Column(wappdb.String)
+    fechaofi_sentfav = wappdb.Column(wappdb.Date)
+
+
 class User(UserMixin, wappdb.Model):
     id = wappdb.Column(wappdb.Integer, primary_key=True)
     email = wappdb.Column(wappdb.String, index=True, unique=True)

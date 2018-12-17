@@ -29,13 +29,13 @@
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     {% if current_user.is_anonymous %}
-                        <li><a href="{{ url_for('login') }}">Login</a></li>
+                        <li><a href="{{ url_for('login') }}">Iniciar sesión</a></li>
                     {% else %}
 		                {% if current_user.level == 0 %}
-		                    <li><a href="{{ url_for('usuarios') }}">Users</a></li>
+		                    <li><a href="{{ url_for('usuarios') }}">Usuarios</a></li>
                         {% endif %}
-                        <li><a href="{{ url_for('perfil', iduser=current_user.enc_id()) }}">Profile</a></li>
-                        <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                        <li><a href="{{ url_for('perfil', iduser=current_user.enc_id()) }}">Perfil</a></li>
+                        <li><a href="{{ url_for('logout') }}">Cerrar sesión</a></li>
                     {% endif %}
                 </ul>
             </div>

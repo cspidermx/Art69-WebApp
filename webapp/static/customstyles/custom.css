@@ -2,10 +2,13 @@
 /* CSS Document */
 
 input[type=submit].srchbtn {
-  background:url("/static/SearchBtn.jpg");
-  background-size: cover;
+  background:url("/static/SearchBtn.png");
+  background-size: contain;
   background-repeat: no-repeat;
-  border: none;
-  cursor: pointer;
+  background-position: center;
+  color: transparent;
+}
+
+input[type=submit]:active.srchbtn {
   color: transparent;
 }

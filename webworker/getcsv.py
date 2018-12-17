@@ -306,6 +306,12 @@ def update69():
                         DBSESSION.add(newrecord)
                 i += 1
             DBSESSION.commit()
+            prev_file_num = int(art69_file.split('/')[-1][6:10]) - 1
+            rng = 4 - len(str(prev_file_num))
+            filenum = "".join("0" for ii in range(rng)) + str(prev_file_num)
+            art69_file_prev = 'historical69csv/art69_' + filenum + '.csv'
+            os.remove(art69_file_prev)
+            os.rename(art69_file, art69_file_prev)
         print('Art69: ', fecha)
     else:
         os.remove(art69_file)

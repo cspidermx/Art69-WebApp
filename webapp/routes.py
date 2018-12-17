@@ -2,7 +2,7 @@ from flask import render_template, flash, redirect, url_for
 from webapp import app
 from webapp.forms import LoginForm
 from flask_login import current_user, login_user
-from webapp.models import User
+from webapp.models import User, DataArt69b
 from flask_login import logout_user
 from flask_login import login_required
 from flask import request
@@ -13,6 +13,7 @@ from email.message import EmailMessage
 import threading
 import smtplib
 from Crypto.Cipher import AES
+from sqlalchemy import or_
 
 
 def decrypt_id(ctxt):
@@ -62,7 +63,10 @@ def index():
     frmss = SearchArts()
     srchresp = None
     if frmss.validate_on_submit():
-        pass
+        likesrch = '%' + frmss.srchstr.data + '%'
+        srchresp = DataArt69b.query.filter(
+            or_(DataArt69b.rfc.like(likesrch), DataArt69b.nombre.like(likesrch))).order_by(
+            DataArt69b.situacion.desc()).all()
     return render_template('index.html', title='Inicio', form=frmss, resp=srchresp)
 
 
