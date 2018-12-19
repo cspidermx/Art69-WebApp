@@ -13,7 +13,9 @@ from email.message import EmailMessage
 import threading
 import smtplib
 from Crypto.Cipher import AES
-from sqlalchemy import or_
+from sqlalchemy import or_, and_
+from datetime import datetime
+import locale
 
 
 def decrypt_id(ctxt):
@@ -61,13 +63,26 @@ def send_password_reset_email(usr):
 @login_required
 def index():
     frmss = SearchArts()
-    srchresp = None
+    a69b = None
     if frmss.validate_on_submit():
-        likesrch = '%' + frmss.srchstr.data + '%'
-        srchresp = DataArt69b.query.filter(
-            or_(DataArt69b.rfc.like(likesrch), DataArt69b.nombre.like(likesrch))).order_by(
-            DataArt69b.situacion.desc()).all()
-    return render_template('index.html', title='Inicio', form=frmss, resp=srchresp)
+        likesrch = '%' + str(frmss.srchstr.data).upper() + '%'
+        a69b = {'DEFINITIVO': DataArt69b.query.filter(and_(DataArt69b.situacion.ilike('definitivo'),
+                                                    or_(DataArt69b.rfc.like(likesrch),
+                                                        DataArt69b.nombre.like(likesrch)))).order_by(
+            DataArt69b.situacion.desc()).all(),
+                'PRESUNTO': DataArt69b.query.filter(and_(DataArt69b.situacion.ilike('presunto'),
+                                                or_(DataArt69b.rfc.like(likesrch),
+                                                    DataArt69b.nombre.like(likesrch)))).order_by(
+            DataArt69b.situacion.desc()).all(),
+                'DESVIRTUADO': DataArt69b.query.filter(and_(DataArt69b.situacion.ilike('desvirtuado'),
+                                                or_(DataArt69b.rfc.like(likesrch),
+                                                    DataArt69b.nombre.like(likesrch)))).order_by(
+            DataArt69b.situacion.desc()).all(),
+                'SENTENCIA FAVORABLE': DataArt69b.query.filter(and_(DataArt69b.situacion.ilike('sentencia favorable'),
+                                                or_(DataArt69b.rfc.like(likesrch),
+                                                    DataArt69b.nombre.like(likesrch)))).order_by(
+            DataArt69b.situacion.desc()).all()}
+    return render_template('index.html', title='Inicio', form=frmss, resp=a69b)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -187,3 +202,11 @@ def dltusr(iduser):
         wappdb.session.delete(usr)
         wappdb.session.commit()
     return redirect(url_for('usuarios'))
+
+
+@app.template_filter('strftime')
+def _jinja2_filter_datetime(dat, fmt=None):
+    locale.setlocale(locale.LC_ALL, 'Spanish_Mexico')
+    fechadt = dat
+    format='%d de %B de %Y'
+    return fechadt.strftime(format)

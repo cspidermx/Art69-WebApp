@@ -12,3 +12,12 @@ input[type=submit].srchbtn {
 input[type=submit]:active.srchbtn {
   color: transparent;
 }
+
+#resp69b th {background-color: #a2c57f;}
+#resp69b tr.par{background-color: #99cfe0;}
+#resp69b tr.non{background-color: #d4ebf2;}
+#resp69b tr.clck:hover {
+    background-color: #ddd;
+    font-weight: bold;
+    cursor: pointer;
+    }
