@@ -36,6 +36,20 @@ class DataArt69b(wappdb.Model):
     fechaofi_sentfav = wappdb.Column(wappdb.Date)
 
 
+class DataArt69(wappdb.Model):
+    __tablename__ = 'sat_art69'
+
+    id = wappdb.Column(wappdb.Integer, primary_key=True)
+    id_info = wappdb.Column(wappdb.Integer, primary_key=True)
+    rfc = wappdb.Column(wappdb.String, nullable=False)
+    razon_social = wappdb.Column(wappdb.String, nullable=False)
+    tipo_persona = wappdb.Column(wappdb.String, nullable=False)
+    supuesto = wappdb.Column(wappdb.String, nullable=False)
+    fech_prim_pub = wappdb.Column(wappdb.Date, nullable=False)
+    monto = wappdb.Column(wappdb.DECIMAL)
+    fech_pub = wappdb.Column(wappdb.Date)
+
+
 class User(UserMixin, wappdb.Model):
     id = wappdb.Column(wappdb.Integer, primary_key=True)
     email = wappdb.Column(wappdb.String, index=True, unique=True)

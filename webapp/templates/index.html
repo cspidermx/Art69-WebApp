@@ -35,9 +35,9 @@
         </div>
     </div>
     <hr>
-    {% if resp is not none %}
-        {% for r1 in resp %}
-            {% if resp[r1]|length > 0 %}
+    {% if resp[0] is not none %}
+        {% for r1 in resp[0] %}
+            {% if resp[0][r1]|length > 0 %}
                 <h3>{{ r1 }}</h3>
                 <table class="table table-responsive-sm table-bordered" id="resp69b">
                     <thead>
@@ -48,7 +48,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                    {% for r in resp[r1] %}
+                    {% for r in resp[0][r1] %}
                         {% if loop.index % 2 == 0 %}
                             {% set parnon = 'par' %}
                         {% else %}
@@ -120,6 +120,17 @@
                     {% endfor %}
                     </tbody>
                 </table>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+    {% if resp[1] is not none %}
+        {% set vars = {'lastrfc': ''} %}
+        {% for r1 in resp[1] %}
+            {% if r1.rfc != vars.lastrfc %}
+                {% if vars.update({'lastrfc': r1.rfc}) %} {% endif %}
+                {{ r1.rfc }} - {{ r1.razon_social }} - {{ r1.supuesto }} - {{ r1.fech_prim_pub|strftime }} <BR>
+            {% else %}
+                - {{ r1.razon_social }} - {{ r1.supuesto }} - {{ r1.fech_prim_pub|strftime }} <BR>
             {% endif %}
         {% endfor %}
     {% endif %}

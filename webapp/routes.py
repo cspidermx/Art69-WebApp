@@ -2,7 +2,7 @@ from flask import render_template, flash, redirect, url_for
 from webapp import app
 from webapp.forms import LoginForm
 from flask_login import current_user, login_user
-from webapp.models import User, DataArt69b
+from webapp.models import User, DataArt69b, DataArt69
 from flask_login import logout_user
 from flask_login import login_required
 from flask import request
@@ -14,7 +14,6 @@ import threading
 import smtplib
 from Crypto.Cipher import AES
 from sqlalchemy import or_, and_
-from datetime import datetime
 import locale
 
 
@@ -64,6 +63,7 @@ def send_password_reset_email(usr):
 def index():
     frmss = SearchArts()
     a69b = None
+    a69 = None
     if frmss.validate_on_submit():
         likesrch = '%' + str(frmss.srchstr.data).upper() + '%'
         a69b = {'DEFINITIVO': DataArt69b.query.filter(and_(DataArt69b.situacion.ilike('definitivo'),
@@ -82,7 +82,10 @@ def index():
                                                 or_(DataArt69b.rfc.like(likesrch),
                                                     DataArt69b.nombre.like(likesrch)))).order_by(
             DataArt69b.situacion.desc()).all()}
-    return render_template('index.html', title='Inicio', form=frmss, resp=a69b)
+        a69 = DataArt69.query.filter(
+            or_(DataArt69.rfc.like(likesrch), DataArt69.razon_social.like(likesrch))).order_by(
+            DataArt69.rfc.asc(), DataArt69.fech_prim_pub.desc()).all()
+    return render_template('index.html', title='Inicio', form=frmss, resp=(a69b, a69))
 
 
 @app.route('/login', methods=['GET', 'POST'])
