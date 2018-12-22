@@ -1,0 +1,47 @@
+{% if resp[1] is not none %}
+    {% set vars = {'lastrfc': '', 'continuo': 'non', 'ajuste': 0} %}
+    {% if resp[1]|length > 0 %}
+        <table class="table table-responsive-sm table-bordered" id="resp69">
+            <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">RFC</th>
+                    <th scope="col">Razón Social</th>
+                    <th scope="col">Supuesto</th>
+                    <th scope="col">Fecha de Primera Publicación</th>
+                </tr>
+            </thead>
+            {% for r1 in resp[1] %}
+                <tbody>
+                    {% if r1.rfc != vars.lastrfc %}
+                        {% if vars.update({'lastrfc': r1.rfc}) %} {% endif %}
+                        {% if vars.continuo == 'non' %}
+                            {% set parnon = 'par' %}
+                        {% else %}
+                            {% set parnon = 'non' %}
+                        {% endif %}
+                        {% if vars.update({'continuo': parnon}) %} {% endif %}
+                        <tr class='{{ parnon }}'>
+                            <th scope="row">{{ loop.index + vars.ajuste }}</th>
+                            <td>{{ r1.rfc }}</td>
+                            <td>{{ r1.razon_social }}</td>
+                            <td>{{ r1.supuesto }}</td>
+                            <td>{{ r1.fech_prim_pub|strftime }}</td>
+                        </tr>
+                    {% else %}
+                        <tr class='{{ vars.continuo }}'>
+                            {% if vars.update({'ajuste': vars.ajuste - 1}) %} {% endif %}
+                            <th scope="row"></th>
+                            <td></td>
+                            <td>{{ r1.razon_social }}</td>
+                            <td>{{ r1.supuesto }}</td>
+                            <td>{{ r1.fech_prim_pub|strftime }}</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            {% endfor %}
+        </table>
+    {% else %}
+        <h3>No se encontraron registros</h3>
+    {% endif %}
+{% endif %}

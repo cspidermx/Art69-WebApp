@@ -36,118 +36,63 @@
     </div>
     <hr>
     {% if resp[0] is not none %}
-        {% for r1 in resp[0] %}
-            {% if resp[0][r1]|length > 0 %}
-                <h3>{{ r1 }}</h3>
-                <table class="table table-responsive-sm table-bordered" id="resp69b">
-                    <thead>
-                        <tr>
-                            <th scope="col"></th>
-                            <th scope="col">RFC</th>
-                            <th scope="col">Razón Social</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {% for r in resp[0][r1] %}
-                        {% if loop.index % 2 == 0 %}
-                            {% set parnon = 'par' %}
-                        {% else %}
-                            {% set parnon = 'non' %}
-                        {% endif %}
-                        <tr class='clickable-row {{ parnon }} clck' data-ident='{{ r.id }}'>
-                          <th scope="row">{{ loop.index }}</th>
-                          <td>{{ r.rfc }}</td>
-                          <td>{{ r.nombre }}</td>
-                        </tr>
-                        <tr style="display:none;" id="{{ r.id }}"  class="{{ parnon }}">
-                            <th scope="row"> </th>
-                            <td></td>
-                            <td>
-                                <table class="table table-responsive-sm table-bordered" id="detail69b">
-                                    <tbody>
-                                        {% if r.numofi_presuncion is not none %}
-                                            <tr>
-                                                <td>Número Oficio global de Presunción</td>
-                                                <td>{{ r.numofi_presuncion }}</td>
-                                            </tr>
-                                        {% endif %}
-                                        {% if r.fechaofi_presuncion is not none %}
-                                            <tr>
-                                                <td>Fecha Oficio global de Presunción</td>
-                                                <td>{{ r.fechaofi_presuncion|strftime }}</td>
-                                            </tr>
-                                        {% endif %}
-                                        {% if r.numofi_desvirtuado is not none %}
-                                            <tr>
-                                                <td>Número Oficio global de contribuyentes que Desvirtuaron</td>
-                                                <td>{{ r.numofi_desvirtuado }}</td>
-                                            </tr>
-                                        {% endif %}
-                                        {% if r.fechaofi_desvirtuado is not none %}
-                                            <tr>
-                                                <td>Fecha Oficio global de contribuyentes que Desvirtuaron</td>
-                                                <td>{{ r.fechaofi_desvirtuado|strftime }}</td>
-                                            </tr>
-                                        {% endif %}
-                                        {% if r.numofi_definitivo is not none %}
-                                            <tr>
-                                                <td>Número Oficio global de Definitivos</td>
-                                                <td>{{ r.numofi_definitivo }}</td>
-                                            </tr>
-                                        {% endif %}
-                                        {% if r.fechaofi_definitivo is not none %}
-                                            <tr>
-                                                <td>Fecha Oficio global de Definitivos</td>
-                                                <td>{{ r.fechaofi_definitivo|strftime }}</td>
-                                            </tr>
-                                        {% endif %}
-                                        {% if r.numofi_sentfav is not none %}
-                                            <tr>
-                                                <td>Número Oficio global de Sentencia Favorable</td>
-                                                <td>{{ r.numofi_sentfav }}</td>
-                                            </tr>
-                                        {% endif %}
-                                        {% if r.fechaofi_sentfav is not none %}
-                                            <tr>
-                                                <td>Fecha Oficio global de Sentencia Favorable</td>
-                                                <td>{{ r.fechaofi_sentfav|strftime }}</td>
-                                            </tr>
-                                        {% endif %}
-                                    </tbody>
-                                </table>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            {% endif %}
-        {% endfor %}
+        <div class="tab" id="resultadosbusqueda">
+          <button class="tablinks" onclick="openContent(event, 'content69b')" id="tab69b">Art. 69b</button>
+          <button class="tablinks" onclick="openContent(event, 'content69')">Art. 69 Crédito Fiscal</button>
+        </div>
     {% endif %}
-    {% if resp[1] is not none %}
-        {% set vars = {'lastrfc': ''} %}
-        {% for r1 in resp[1] %}
-            {% if r1.rfc != vars.lastrfc %}
-                {% if vars.update({'lastrfc': r1.rfc}) %} {% endif %}
-                {{ r1.rfc }} - {{ r1.razon_social }} - {{ r1.supuesto }} - {{ r1.fech_prim_pub|strftime }} <BR>
-            {% else %}
-                - {{ r1.razon_social }} - {{ r1.supuesto }} - {{ r1.fech_prim_pub|strftime }} <BR>
-            {% endif %}
-        {% endfor %}
-    {% endif %}
+    <div id="content69b" class="tabcontent">
+        {% include '_69b.html' %}
+    </div>
+    <div id="content69" class="tabcontent">
+        {% include '_69.html' %}
+    </div>
 {% endblock %}
 
 {% block scripts %}
 	{{super()}}
     <script>
-    jQuery(document).ready(function($) {
-        $(".clickable-row").click(function() {
-            var result_style = document.getElementById($(this).data("ident")).style;
-            if (result_style.display == 'table-row'){
-                result_style.display = 'none';
+        jQuery(document).ready(function($) {
+            $(".clickable-row").click(function() {
+                var result_style = document.getElementById($(this).data("ident")).style;
+                if (result_style.display == 'table-row'){
+                    result_style.display = 'none';
+                }else{
+                    result_style.display = 'table-row';
+                }
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function(){
+            var element =  document.getElementById('resultadosbusqueda');
+            if (typeof(element) != 'undefined' && element != null)
+            {
+                var element =  document.getElementById('tab69b');
+                element.click();
+            }
+            var titulo69b = document.getElementsByClassName("Titulo69b").length;
+            if (titulo69b == 0)
+            {
+                document.getElementById('NoRecords').style.display = "block";
             }else{
-                result_style.display = 'table-row';
+                document.getElementById('NoRecords').style.display = "none";
             }
         });
-    });
+    </script>
+    <script>
+        function openContent(evt, contentName) {
+          var i, tabcontent, tablinks;
+          tabcontent = document.getElementsByClassName("tabcontent");
+          for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+          }
+          tablinks = document.getElementsByClassName("tablinks");
+          for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+          }
+          document.getElementById(contentName).style.display = "block";
+          evt.currentTarget.className += " active";
+        }
     </script>
 {% endblock %}
