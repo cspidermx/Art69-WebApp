@@ -26,7 +26,7 @@ input[type=submit]:active.srchbtn {
 #resp69 tr.par{background-color: #d0e2bf;}
 #resp69 tr.non{background-color: #b6d29c;}
 
-/* Style the tab */
+/* TAB */
 .tab {
   overflow: hidden;
   border: 1px solid #ccc;
@@ -58,3 +58,33 @@ input[type=submit]:active.srchbtn {
   border: 1px solid #ccc;
   border-top: none;
 }
+
+
+/* PANELS */
+.tile-title {
+		margin-top: 0px;
+	}
+
+.tile {
+  width: 100%;
+	display: inline-block;
+	box-sizing: border-box;
+	background: #fff;
+	padding: 20px;
+	margin-bottom: 30px;
+    color: #fff;
+}
+
+.tile-green {
+background: #a2c57f !important;
+}
+.tile-green:hover {
+        background: #91b172 !important;
+    }
+
+.tile-blue {
+background: #99cfe0 !important;
+}
+.tile-blue:hover {
+        background: #89bac9 !important;
+    }

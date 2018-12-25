@@ -50,6 +50,19 @@ class DataArt69(wappdb.Model):
     fech_pub = wappdb.Column(wappdb.Date)
 
 
+class Info69(wappdb.Model):
+    __tablename__ = 'info_art69'
+
+    id = wappdb.Column(wappdb.Integer, primary_key=True)
+    fechaupdate = wappdb.Column(wappdb.Date)
+
+class Info69b(wappdb.Model):
+    __tablename__ = 'info_art69b'
+
+    id = wappdb.Column(wappdb.Integer, primary_key=True)
+    fechaupdate = wappdb.Column(wappdb.Date)
+
+
 class User(UserMixin, wappdb.Model):
     id = wappdb.Column(wappdb.Integer, primary_key=True)
     email = wappdb.Column(wappdb.String, index=True, unique=True)

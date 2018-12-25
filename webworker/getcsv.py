@@ -311,7 +311,7 @@ def update69():
             filenum = "".join("0" for ii in range(rng)) + str(prev_file_num)
             art69_file_prev = 'historical69csv/art69_' + filenum + '.csv'
             os.remove(art69_file_prev)
-            os.rename(art69_file, art69_file_prev)
+        os.rename(art69_file, art69_file_prev)
         print('Art69: ', fecha)
     else:
         os.remove(art69_file)

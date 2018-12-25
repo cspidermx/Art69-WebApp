@@ -6,7 +6,22 @@
     <link href="{{ url_for('static', filename='customstyles/custom.css') }}" rel="stylesheet" type="text/css">
 {% endblock %}
 {% block app_content %}
-    <h1>Hola, {{ current_user.fullname }}!</h1><BR>
+    <!-- <h1>Hola, {{ current_user.fullname }}!</h1><BR> -->
+    <div class="row">
+        <div class="col-sm-4">
+          <div class="tile tile-green">
+            <h3 class="tile-title">Art. 69b actualizado al:</h3>
+              <p><strong>{{ fchs[0].fechaupdate|strftime }}</strong></p>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="tile tile-blue">
+            <h3 class="tile-title">Art. 69 actualizado al:</h3>
+              <p><strong>{{ fchs[1].fechaupdate|strftime }}</strong></p>
+          </div>
+        </div>
+    </div>
+    <br>
     <div class="row">
         <div class="col-md-8">
             <form action = "" method = post class="form" role="form">

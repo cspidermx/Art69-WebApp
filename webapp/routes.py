@@ -2,7 +2,7 @@ from flask import render_template, flash, redirect, url_for
 from webapp import app
 from webapp.forms import LoginForm
 from flask_login import current_user, login_user
-from webapp.models import User, DataArt69b, DataArt69
+from webapp.models import User, DataArt69b, DataArt69, Info69, Info69b
 from flask_login import logout_user
 from flask_login import login_required
 from flask import request
@@ -14,6 +14,7 @@ import threading
 import smtplib
 from Crypto.Cipher import AES
 from sqlalchemy import or_, and_
+from sqlalchemy.sql.expression import func
 import locale
 
 
@@ -62,6 +63,13 @@ def send_password_reset_email(usr):
 @login_required
 def index():
     frmss = SearchArts()
+    mx = wappdb.session.query(func.max(Info69b.id)).one()
+    if mx[0] is not None:
+        if69b = Info69b.query.filter_by(id=mx[0]).first()
+    else:
+        if69b = None
+    if69 = Info69.query.first()
+    updates = (if69b, if69)
     a69b = None
     a69 = None
     if frmss.validate_on_submit():
@@ -85,7 +93,7 @@ def index():
         a69 = DataArt69.query.filter(
             or_(DataArt69.rfc.like(likesrch), DataArt69.razon_social.like(likesrch))).order_by(
             DataArt69.rfc.asc(), DataArt69.fech_prim_pub.desc()).all()
-    return render_template('index.html', title='Inicio', form=frmss, resp=(a69b, a69))
+    return render_template('index.html', title='Inicio', form=frmss, resp=(a69b, a69), fchs=updates)
 
 
 @app.route('/login', methods=['GET', 'POST'])
