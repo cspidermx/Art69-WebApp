@@ -60,9 +60,10 @@ input[type=submit]:active.srchbtn {
 }
 
 
-/* PANELS */
+/* TILES */
 .tile-title {
 		margin-top: 0px;
+
 	}
 
 .tile {
@@ -70,9 +71,11 @@ input[type=submit]:active.srchbtn {
 	display: inline-block;
 	box-sizing: border-box;
 	background: #fff;
-	padding: 20px;
-	margin-bottom: 30px;
+	padding: 10px;
+	margin-bottom: 15px;
     color: #fff;
+    border-style: outset;
+    border-radius: 10px;
 }
 
 .tile-green {
@@ -88,3 +91,14 @@ background: #99cfe0 !important;
 .tile-blue:hover {
         background: #89bac9 !important;
     }
+
+.container-color{
+background: #ebb6c3 !important;
+}
+
+.link-color{
+color: #cb3e61 !important;
+}
+.link-color:hover{
+color: #f6dee4 !important;
+}

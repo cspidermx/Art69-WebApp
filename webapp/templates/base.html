@@ -5,41 +5,37 @@
 {% endblock %}
 {% block title %}
     {% if title %}
-        {{ title }} - art69b WebApp
+        {{ title }} - art69 WebApp
     {% else %}
-        Bienvenido al App de revisión del art69b
+        Bienvenido al App de revisión del art69
     {% endif %}
 {% endblock %}
-
+{% block styles %}
+{{super()}}
+    <!-- Custom Style -->
+    <link href="{{ url_for('static', filename='customstyles/custom.css') }}" rel="stylesheet" type="text/css">
+{% endblock %}
 {% block navbar %}
-    <nav class="navbar navbar-default ">
+    <nav class="navbar navbar-default container-color">
         <div class="container">
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                    <span class="sr-only">Alternar navegación</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
                 <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='Logo69webapp.png') }}" alt="Art.69 WebApp" width="42" height="42"></a>
             </div>
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <div>
                 <ul class="nav navbar-nav">
                     {% if not current_user.is_anonymous %}
-                        <li><a href="#">Bienvenido, {{ current_user.fullname }}!</a></li>
+                        <li class="navbar-text link-color">Bienvenido, {{ current_user.fullname }}</li>
                     {% endif %}
-                    <!-- <li><a href="{{ url_for('index') }}">Inicio</a></li> -->
-                    <!-- <h1>Hola, {{ current_user.fullname }}!</h1><BR> -->
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     {% if current_user.is_anonymous %}
-                        <li><a href="{{ url_for('login') }}">Iniciar sesión</a></li>
+                        <li><a href="{{ url_for('login') }}" class="link-color">Iniciar sesión</a></li>
                     {% else %}
 		                {% if current_user.level == 0 %}
-		                    <li><a href="{{ url_for('usuarios') }}">Usuarios</a></li>
+		                    <li><a href="{{ url_for('usuarios') }}" class="link-color">Usuarios</a></li>
                         {% endif %}
-                        <li><a href="{{ url_for('perfil', iduser=current_user.enc_id()) }}">Perfil</a></li>
-                        <li><a href="{{ url_for('logout') }}">Cerrar sesión</a></li>
+                        <li><a href="{{ url_for('perfil', iduser=current_user.enc_id()) }}" class="link-color">Perfil</a></li>
+                        <li><a href="{{ url_for('logout') }}" class="link-color">Cerrar sesión</a></li>
                     {% endif %}
                 </ul>
             </div>
